@@ -1,121 +1,72 @@
-# Awesome Compose [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
+## WordPress with MySQL
+This example defines one of the basic setups for WordPress. More details on how this works can be found on the official [WordPress image page](https://hub.docker.com/_/wordpress).
 
-![logo](awesome-compose.jpg)
 
-> A curated list of Docker Compose samples.
-
-These samples provide a starting point for how to integrate different services using a Compose file and to manage their deployment with Docker Compose.
-
-> **Note**
-> The following samples are intended for use in local development environments such as project setups, tinkering with software stacks, etc. These samples must not be deployed in production environments.
-
-<!--lint disable awesome-toc-->
-## Contents
-
-- [Samples of Docker Compose applications with multiple integrated services](#samples-of-docker-compose-applications-with-multiple-integrated-services).
-- [Single service samples](#single-service-samples).
-- [Basic setups for different platforms (not production ready - useful for personal use)](#basic-setups-for-different-platforms-not-production-ready---useful-for-personal-use).
-
-## Samples of Docker Compose applications with multiple integrated services
-
-<a href="https://docs.docker.com/desktop/wasm/"><img src="icon_wasm.svg" alt="Docker + wasm" height="30" align="top"/></a> Icon indicates Sample is compatible with [Docker+Wasm](https://docs.docker.com/desktop/wasm/).
-
-- [`ASP.NET / MS-SQL`](aspnet-mssql) - Sample ASP.NET core application
-with MS SQL server database.
-- [`Elasticsearch / Logstash / Kibana`](elasticsearch-logstash-kibana) - Sample Elasticsearch, Logstash, and Kibana stack.
-- [`Go / NGINX / MySQL`](nginx-golang-mysql) - Sample Go application
-with an Nginx proxy and a MySQL database.
-- [`Go / NGINX / PostgreSQL`](nginx-golang-postgres) - Sample Go
-application with an Nginx proxy and a PostgreSQL database.
-- [`Java Spark / MySQL`](sparkjava-mysql) - Sample Java application and
-a MySQL database.
-- [`NGINX / ASP.NET / MySQL`](nginx-aspnet-mysql) - Sample Nginx reverse proxy with an C# backend using ASP.NET.
-- [`NGINX / Flask / MongoDB`](nginx-flask-mongo) - Sample Python/Flask
-application with Nginx proxy and a Mongo database.
-- [`NGINX / Flask / MySQL`](nginx-flask-mysql) - Sample Python/Flask application with an Nginx proxy and a MySQL database.
-- [`NGINX / Node.js / Redis`](nginx-nodejs-redis) - Sample Node.js application with Nginx proxy and a Redis database.
-- [`NGINX / Go`](nginx-golang) - Sample Nginx proxy with a Go backend.
-- [`NGINX / WSGI / Flask`](nginx-wsgi-flask) - Sample Nginx reverse proxy with a Flask backend using WSGI.
-- [`PostgreSQL / pgAdmin`](postgresql-pgadmin) - Sample setup for postgreSQL database with pgAdmin web interface.
-- [`Python / Flask / Redis`](flask-redis) - Sample Python/Flask and a Redis database.
-- [`React / Spring / MySQL`](react-java-mysql) - Sample React
-application with a Spring backend and a MySQL database.
-- [`React / Express / MySQL`](react-express-mysql) - Sample React
-application with a Node.js backend and a MySQL database.
-- [`React / Express / MongoDB`](react-express-mongodb) - Sample React
-application with a Node.js backend and a Mongo database.
-- [`React / Rust / PostgreSQL`](react-rust-postgres) - Sample React
-application with a Rust backend and a Postgres database.
-- [`React / Nginx`](react-nginx) - Sample React application with Nginx.
-- [`Spring / PostgreSQL`](spring-postgres) - Sample Java application
-with Spring framework and a Postgres database.
-- [`WasmEdge / MySQL / Nginx`](wasmedge-mysql-nginx) - Sample Wasm-based web application with a static HTML frontend, using a MySQL (MariaDB) database. The frontend connects to a Wasm microservice written in Rust, that runs using the WasmEdge runtime.&nbsp;<a href="wasmedge-mysql-nginx"><img src="icon_wasm.svg" alt="Compatible with Docker+wasm" height="30" align="top"/></a>
-- [`WasmEdge / Kafka / MySQL`](wasmedge-kafka-mysql) - Sample Wasm-based microservice that subscribes to a Kafka (Redpanda) queue topic, and transforms and saves any incoming message into a MySQL (MariaDB) database.&nbsp;<a href="wasmedge-kafka-mysql"><img src="icon_wasm.svg" alt="Compatible with Docker+wasm" height="30" align="top"/></a>
-
-## Single service samples
-
-- [`Angular`](angular)
-- [`Spark`](sparkjava)
-- [`VueJS`](vuejs)
-- [`Flask`](flask)
-- [`PHP`](apache-php)
-- [`Traefik`](traefik-golang)
-- [`Django`](django)
-- [`Minecraft server`](https://github.com/docker/awesome-compose/tree/master/minecraft)
-- [`Plex`](https://github.com/docker/awesome-compose/tree/master/plex)
-- [`Portainer`](https://github.com/docker/awesome-compose/tree/master/portainer)
-- [`Wireguard`](https://github.com/docker/awesome-compose/tree/master/wireguard)
-- [`FastAPI`](fastapi)
-
-## Basic setups for different platforms (not production ready - useful for personal use)
-
-- [`Gitea / PostgreSQL`](gitea-postgres)
-- [`Nextcloud / PostgreSQL`](nextcloud-postgres)
-- [`Nextcloud / Redis / MariaDB`](nextcloud-redis-mariadb)
-- [`Pi-hole / cloudflared`](pihole-cloudflared-DoH) - Sample Pi-hole setup with use of DoH cloudflared service
-- [`Prometheus / Grafana`](prometheus-grafana)
-- [`Wordpress / MySQL`](wordpress-mysql)
-
-<!--lint disable awesome-toc-->
-
-## Getting started
-
-These instructions will get you through the bootstrap phase of creating and
-deploying samples of containerized applications with Docker Compose.
-
-### Prerequisites
-
-- Make sure that you have Docker and Docker Compose installed
-  - Windows or macOS:
-    [Install Docker Desktop](https://www.docker.com/get-started)
-  - Linux: [Install Docker](https://www.docker.com/get-started) and then
-    [Docker Compose](https://github.com/docker/compose)
-- Download some or all of the samples from this repository.
-
-### Running a sample
-
-The root directory of each sample contains the `compose.yaml` which
-describes the configuration of service components. All samples can be run in
-a local environment by going into the root directory of each one and executing:
-
-```console
-docker compose up -d
+Project structure:
+```
+.
+├── compose.yaml
+└── README.md
 ```
 
-Check the `README.md` of each sample to get more details on the structure and
-what is the expected output.
-To stop and remove all containers of the sample application run:
-
-```console
-docker compose down
+[_compose.yaml_](compose.yaml)
+```
+services:
+  db:
+    # We use a mariadb image which supports both amd64 & arm64 architecture
+    image: mariadb:10.6.4-focal
+    # If you really want to use MySQL, uncomment the following line
+    #image: mysql:8.0.27
+    ...
+  wordpress:
+    image: wordpress:latest
+    ports:
+      - 80:80
+    restart: always
+    ...
 ```
 
-### Quickstart guides
+When deploying this setup, docker compose maps the WordPress container port 80 to
+port 80 of the host as specified in the compose file.
 
-In addition to all the ready to run Compose samples listed above the folder [official-documentation-samples](official-documentation-samples/README.md) contains quickstart guides. Each of these step by step guides explain which files need to be created to build and run a Docker Compose application.
+> ℹ️ **_INFO_**  
+> For compatibility purpose between `AMD64` and `ARM64` architecture, we use a MariaDB as database instead of MySQL.  
+> You still can use the MySQL image by uncommenting the following line in the Compose file   
+> `#image: mysql:8.0.27`
 
-<!--lint disable awesome-toc-->
-## Contribute
+## Deploy with docker compose
 
-We welcome examples that help people understand how to use Docker Compose for
-common applications. Check the [Contribution Guide](CONTRIBUTING.md) for more details. 
+```
+$ docker compose up -d
+Creating network "wordpress-mysql_default" with the default driver
+Creating volume "wordpress-mysql_db_data" with default driver
+...
+Creating wordpress-mysql_db_1        ... done
+Creating wordpress-mysql_wordpress_1 ... done
+```
+
+
+## Expected result
+
+Check containers are running and the port mapping:
+```
+$ docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                 NAMES
+5fbb4181a069        wordpress:latest    "docker-entrypoint.s…"   35 seconds ago      Up 34 seconds       0.0.0.0:80->80/tcp    wordpress-mysql_wordpress_1
+e0884a8d444d        mysql:8.0.19        "docker-entrypoint.s…"   35 seconds ago      Up 34 seconds       3306/tcp, 33060/tcp   wordpress-mysql_db_1
+```
+
+Navigate to `http://localhost:80` in your web browser to access WordPress.
+
+![page](output.jpg)
+
+Stop and remove the containers
+
+```
+$ docker compose down
+```
+
+To remove all WordPress data, delete the named volumes by passing the `-v` parameter:
+```
+$ docker compose down -v
+```
